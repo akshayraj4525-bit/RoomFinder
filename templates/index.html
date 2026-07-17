@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RoomFinder</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css">
+</head>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <body class="home-page">
+
+<nav class="navbar navbar-dark bg-dark">
+<div class="container">
+<div class="d-flex align-items-center">
+
+    <div class="dropdown me-2">
+
+        <button
+            class="btn btn-dark border-0"
+            data-bs-toggle="dropdown">
+
+            👤
+
+        </button>
+
+        <ul class="dropdown-menu">
+
+            <li>
+                <a class="dropdown-item"
+                   href="/profile">
+                   Profile
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item"
+                   href="/favorites">
+                   Favorites
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item"
+                   href="/admin">
+                   Admin
+                </a>
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li>
+                <a class="dropdown-item text-danger"
+                   href="/logout">
+                   Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <a class="navbar-brand mb-0"
+       href="/">
+       RoomFinder
+    </a>
+
+</div>
+
+
+
+<div>
+
+{% if "user_id" not in session %}
+
+<a href="/register" class="btn btn-light">Register</a>
+<a href="/login" class="btn btn-success">Login</a>
+
+{% endif %}
+
+{% if session.get("role") == "seller" %}
+
+<a href="/add-property" class="btn btn-primary">
+Add Property
+</a>
+
+<a href="/dashboard" class="btn btn-warning">
+Dashboard
+</a>
+
+{% endif %}
+
+</div>
+</div>
+</nav>
+
+<div class="container home-section">
+
+<h1 class="home-title">
+    Find Rooms & Flats in Dehradun
+</h1>
+
+<p class="home-subtitle">
+    Search the best rooms and flats that fit your budget.
+</p>
+
+<form action="/search" method="GET" class="search-form">
+
+<select name="area" class="form-select">
+
+<option value="Prem Nagar">Prem Nagar</option>
+<option value="Kehri Gaon">Kehri Gaon</option>
+<option value="Sudhowala">Sudhowala</option>
+<option value="Thakurpur">Thakurpur</option>
+<option value="Nanda Ki Chowki">Nanda Ki Chowki</option>
+
+</select>
+
+<button class="btn btn-dark">
+    Search Rooms
+</button>
+
+</form>
+
+<h2 class="room-heading">
+    Available Rooms
+</h2>
+
+
+<div class="row g-4">
+
+{% for room in rooms %}
+
+<div class="col-lg-4 col-md-6 mb-4">
+
+    <div class="card room-card shadow-lg">
+
+    <div style="position: relative;">
+
+    <img
+    src="/static/uploads/{{ room[7] }}"
+    class="card-img-top"
+    style="height:220px;object-fit:cover;">
+
+    <a href="/favorite/{{ room[0] }}"
+       style="
+       position:absolute;
+       top:10px;
+       right:10px;
+       font-size:30px;
+       color:white;
+       text-decoration:none;">
+
+       {% if room[0] in favorite_ids %}
+            ❤️
+        {% else %}
+            🤍
+        {% endif %}
+
+    </a>
+
+</div>
+
+
+<a href="/property/{{ room[0] }}"
+class="btn btn-primary">
+
+View Details
+
+</a>
+
+<span class="badge bg-success">
+Featured
+</span>
+
+<h4>{{ room[2] }}</h4>
+
+<p><strong>Rent:</strong> ₹{{ room[3] }}</p>
+
+<p><strong>Area:</strong> {{ room[4] }}</p>
+
+<p><strong>Address:</strong> {{ room[5] }}</p>
+
+<p><strong>Contact:</strong> {{ room[6] }}</p>
+
+<p>
+<strong>Property Type:</strong>
+{{ room[10] }}
+</p>
+
+<p>
+<strong>Facilities:</strong>
+{{ room[11] }}
+</p>
+
+<p>
+<strong>Occupancy:</strong>
+{{ room[12] }}
+</p>
+
+
+{% if session.get("role") == "seller" %}
+
+<a href="/delete/{{ room[0] }}"
+class="btn btn-danger mt-2">
+Delete Property
+</a>
+
+{% endif %}
+
+<a href="https://wa.me/91{{ room[6] }}"
+target="_blank"
+class="btn btn-success">
+
+WhatsApp Owner
+
+</a>
+
+</div>
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<div id="ai-button">
+    🤖
+</div>
+ 
+<div id="ai-chat">
+
+    <div id="ai-header">
+        🤖 RoomFinder AI
+    </div>
+
+    <div id="ai-messages"></div>
+
+    <div id="ai-input-area">
+
+    <input
+        type="text"
+        id="ai-input"
+        placeholder="Ask about rooms..."
+    >
+
+    <button id="mic-btn" title="Voice Search">
+    <i class="fa-solid fa-microphone"></i>
+</button>
+
+    <button id="send-ai">
+        Send
+    </button>
+
+    </div>
+
+</div>
+
+<script>
+
+const aiButton = document.getElementById("ai-button");
+const aiChat = document.getElementById("ai-chat");
+const sendBtn = document.getElementById("send-ai");
+const input = document.getElementById("ai-input");
+const messages = document.getElementById("ai-messages");
+
+function showWelcomeMessage(){
+
+    messages.innerHTML = `
+
+    <div class="ai-message">
+
+        <div class="message-title">
+            🤖 RoomFinder AI
+        </div>
+
+        👋 Welcome Akshay!
+
+        <br><br>
+
+        I can help you find:
+
+        <br><br>
+
+        🏠 Single Room
+
+        <br>
+
+        🏢 Double Room
+
+        <br>
+
+        💰 Budget Rooms
+
+        <br>
+
+        📍 Area Search
+
+        <br><br>
+
+        <b>Try asking:</b>
+
+        <br>
+
+        • Show me room in Prem Nagar
+
+        <br>
+
+        • Single room under 8000
+
+        <br>
+
+        • Double room in Sudhowala
+
+    </div>
+
+    `;
+
+}
+
+// Open / Close Chat
+aiButton.onclick = function(){
+
+    if(aiChat.style.display==="block"){
+
+        aiChat.style.display="none";
+
+    }else{
+
+        aiChat.style.display="block";
+         showWelcomeMessage();
+    }
+
+};
+
+
+// Send Message
+sendBtn.onclick = async function(){
+
+    const question = input.value.trim();
+
+    if(question==="") return;
+
+    messages.innerHTML += `
+        <div style="margin-bottom:10px;">
+            <b>You:</b><br>${question}
+        </div>
+    `;
+
+    input.value="";
+
+    const response = await fetch("/ask_ai",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            question:question
+        })
+
+    });
+
+    const data = await response.json();
+
+    messages.innerHTML += `
+        <div style="margin-bottom:15px;color:#0d6efd;">
+            <b>AI:</b><br>${data.answer}
+        </div>
+    `;
+
+    messages.scrollTop = messages.scrollHeight;
+
+};
+
+</script>
+
+</body>
+</html>

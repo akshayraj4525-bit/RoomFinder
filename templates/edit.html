@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Edit Property</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+</head>
+
+<body class="add-property-page">
+
+<div class="add-property-box">
+
+<h2 class="text-center mb-4">
+
+Edit Property
+
+</h2>
+
+<form method="POST">
+
+<!-- Room Type -->
+
+<label class="form-label">
+
+Room Type
+
+</label>
+
+<select
+name="room_type"
+class="form-control mb-3">
+
+<option {% if room[2]=="Single Room" %}selected{% endif %}>
+Single Room
+</option>
+
+<option {% if room[2]=="Double Room" %}selected{% endif %}>
+Double Room
+</option>
+
+<option {% if room[2]=="PG" %}selected{% endif %}>
+PG
+</option>
+
+<option {% if room[2]=="2 BHK" %}selected{% endif %}>
+2 BHK
+</option>
+
+<option {% if room[2]=="4 BHK" %}selected{% endif %}>
+4 BHK
+</option>
+
+</select>
+
+<!-- Property Type -->
+
+<label class="form-label">
+
+Property Type
+
+</label>
+
+<select
+name="property_type"
+class="form-control mb-3">
+
+<option {% if room[10]=="Independent Room" %}selected{% endif %}>
+Independent Room
+</option>
+
+<option {% if room[10]=="Shared Room" %}selected{% endif %}>
+Shared Room
+</option>
+
+<option {% if room[10]=="PG" %}selected{% endif %}>
+PG
+</option>
+
+<option {% if room[10]=="Flat" %}selected{% endif %}>
+Flat
+</option>
+
+<option {% if room[10]=="Hostel" %}selected{% endif %}>
+Hostel
+</option>
+
+</select>
+
+<!-- Area -->
+
+<label class="form-label">
+
+Area
+
+</label>
+
+<select
+name="area"
+class="form-control mb-3">
+
+<option {% if room[4]=="Prem Nagar" %}selected{% endif %}>
+Prem Nagar
+</option>
+
+<option {% if room[4]=="Kehri Gaon" %}selected{% endif %}>
+Kehri Gaon
+</option>
+
+<option {% if room[4]=="Sudhowala" %}selected{% endif %}>
+Sudhowala
+</option>
+
+<option {% if room[4]=="Thakurpur" %}selected{% endif %}>
+Thakurpur
+</option>
+
+<option {% if room[4]=="Nanda Ki Chowki" %}selected{% endif %}>
+Nanda Ki Chowki
+</option>
+
+</select>
+
+<!-- Address -->
+
+<label class="form-label">
+
+Address
+
+</label>
+
+<input
+type="text"
+name="address"
+value="{{ room[5] }}"
+class="form-control mb-3">
+
+<!-- Google Map -->
+
+<label class="form-label">
+
+Google Maps Link
+
+</label>
+
+<input
+type="text"
+name="map_link"
+value="{{ room[8] }}"
+class="form-control mb-3">
+
+<!-- Contact -->
+
+<label class="form-label">
+
+Contact Number
+
+</label>
+
+<input
+type="text"
+name="contact"
+value="{{ room[6] }}"
+class="form-control mb-3">
+
+<!-- Rent -->
+
+<label class="form-label">
+
+Rent
+
+</label>
+
+<input
+type="text"
+name="rent"
+value="{{ room[3] }}"
+class="form-control mb-3">
+
+<!-- Facilities -->
+
+<label class="form-label">
+
+Facilities
+
+</label>
+
+<div class="mb-3">
+
+<div class="form-check">
+
+<input
+class="form-check-input"
+type="checkbox"
+name="facilities"
+value="WiFi">
+
+<label class="form-check-label">
+
+WiFi
+
+</label>
+
+</div>
+
+<div class="form-check">
+
+<input
+class="form-check-input"
+type="checkbox"
+name="facilities"
+value="AC">
+
+<label class="form-check-label">
+
+AC
+
+</label>
+
+</div>
+
+<div class="form-check">
+
+<input
+class="form-check-input"
+type="checkbox"
+name="facilities"
+value="Parking">
+
+<label class="form-check-label">
+
+Parking
+
+</label>
+
+</div>
+
+<div class="form-check">
+
+<input
+class="form-check-input"
+type="checkbox"
+name="facilities"
+value="Attached Bathroom">
+
+<label class="form-check-label">
+
+Attached Bathroom
+
+</label>
+
+</div>
+
+<div class="form-check">
+
+<input
+class="form-check-input"
+type="checkbox"
+name="facilities"
+value="Kitchen">
+
+<label class="form-check-label">
+
+Kitchen
+
+</label>
+
+</div>
+
+<div class="form-check">
+
+<input
+class="form-check-input"
+type="checkbox"
+name="facilities"
+value="Balcony">
+
+<label class="form-check-label">
+
+Balcony
+
+</label>
+
+</div>
+
+</div>
+
+<!-- Occupancy -->
+
+<label class="form-label">
+
+Occupancy
+
+</label>
+
+<select
+name="occupancy"
+class="form-control mb-4">
+
+<option {% if room[12]=="Boys" %}selected{% endif %}>
+Boys
+</option>
+
+<option {% if room[12]=="Girls" %}selected{% endif %}>
+Girls
+</option>
+
+<option {% if room[12]=="Family" %}selected{% endif %}>
+Family
+</option>
+
+<option {% if room[12]=="Anyone" %}selected{% endif %}>
+Anyone
+</option>
+
+</select>
+
+<button
+class="btn btn-success w-100">
+
+Update Property
+
+</button>
+
+<a
+href="/dashboard"
+class="btn btn-secondary w-100 mt-3">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Panel</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <body class="admin-page">
+
+<div class="container mt-5">
+
+<h2>Pending Properties</h2>
+
+{% for room in rooms %}
+
+<div class="card p-3 mb-3">
+
+<h4>{{ room[2] }}</h4>
+
+<p>Rent: ₹{{ room[3] }}</p>
+
+<p>Area: {{ room[4] }}</p>
+
+<a href="/approve/{{ room[0] }}"
+class="btn btn-success">
+
+Approve
+
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>
