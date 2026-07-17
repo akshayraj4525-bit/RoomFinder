@@ -10,7 +10,7 @@ import random
 import requests
 import os
 from werkzeug.utils import secure_filename
-from voice_ai import speech_to_text
+# from voice_ai import speech_to_text
 
 app = Flask(__name__)
 
@@ -992,8 +992,8 @@ def ask_ai_route():
         "answer": answer
     })
 
-@app.route("/voice_upload", methods=["POST"])
-def voice_upload():
+ #@app.route("/voice_upload", methods=["POST"])
+ #def voice_upload():
 
     if "audio" not in request.files:
         return jsonify({
@@ -1046,13 +1046,6 @@ def voice_upload():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-    UPLOAD_FOLDER = "uploads"
-
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 
 
 
