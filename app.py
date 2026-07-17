@@ -975,7 +975,11 @@ def tables():
 def db_path():
     return os.path.abspath("database.db")
 
-from ai import ask_ai
+try:
+    from ai import ask_ai
+except Exception:
+    def ask_ai(question):
+        return "AI feature is currently unavailable."
 
 @app.route("/ask_ai", methods=["POST"])
 def ask_ai_route():
