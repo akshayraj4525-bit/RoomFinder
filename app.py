@@ -24,7 +24,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 from datetime import timedelta
 app.permanent_session_lifetime = timedelta(days=30)
 
-MSG91_AUTH_KEY = os.getenv("547072AqRVck8zJ58N6a476fd4P1")
+MSG91_AUTH_KEY = os.getenv("MSG91_AUTH_KEY")
 
 def send_sms_otp(phone, otp):
 
@@ -993,6 +993,49 @@ def ask_ai_route():
 
     return jsonify({
         "answer": answer
+    })
+
+@app.route("/verify-msg91", methods=["POST"])
+def verify_msg91():
+
+    data = request.get_json()
+
+    access_token = data.get("accessToken")
+
+    authkey = os.getenv("MSG91_AUTH_KEY")
+
+    url = "https://control.msg91.com/api/v5/widget/verifyAccessToken"
+
+    payload = {
+        "authkey": authkey,
+        "access-token": access_token
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(
+        url,
+        json=payload,
+        headers=headers
+    )
+
+    result = response.json()
+
+    print(result)
+
+    if result.get("type") == "success":
+
+        session["buyer_logged_in"] = True
+        session["role"] = "buyer"
+
+        return jsonify({
+            "success": True
+        })
+
+    return jsonify({
+        "success": False
     })
 
  #@app.route("/voice_upload", methods=["POST"])

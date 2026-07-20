@@ -32,11 +32,45 @@ href="{{ url_for('static', filename='style.css') }}">
 
 Send OTP
 
-</button>
+<script type="text/javascript">
+var configuration = {
+    widgetId: "366774643541373035313139",
+    tokenAuth: "547072T7VBJ7DM6a5dce97P1",
+    identifier: "",
+    exposeMethods: true,
 
-</form>
+    success: function (data) {
+        console.log("OTP Verified", data);
 
-</div>
+        fetch("/verify-msg91", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                accessToken: data.token
+            })
+        })
+        .then(res => res.json())
+        .then(result => {
+
+            if(result.success){
+                window.location.href="/home";
+            }else{
+                alert("OTP Verification Failed");
+            }
+
+        });
+
+    },
+
+    failure: function (err) {
+        console.log(err);
+    }
+};
+</script>
+
+<script src="https://control.msg91.com/app/assets/otp-provider/otp-provider.js"></script>
 
 </body>
 </html>
