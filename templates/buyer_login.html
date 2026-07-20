@@ -15,12 +15,12 @@ href="{{ url_for('static', filename='style.css') }}">
 
     <h1>Buyer Login</h1>
 
-    <form action="/send-otp" method="POST">
-
-        <input type="text"
-               name="phone"
-               class="form-control"
-               placeholder="Enter Phone Number">
+    <button
+type="button"
+class="btn btn-primary mt-3"
+onclick="sendOTP()">
+Verify Mobile Number
+</button>
 
         <button class="btn btn-primary mt-3">
             Send OTP
@@ -29,6 +29,58 @@ href="{{ url_for('static', filename='style.css') }}">
     </form>
 
 </div>
+
+<script>
+
+var configuration = {
+    widgetId: "366774643541373035313139",
+    tokenAuth: "547072T7VBJ7DM6a5dce97P1",
+    identifier: "",
+
+    exposeMethods: true,
+
+    success: function(data){
+
+        fetch("/verify-msg91",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                accessToken:data.token
+            })
+        })
+        .then(r=>r.json())
+        .then(res=>{
+
+            if(res.success){
+                window.location="/home";
+            }else{
+                alert("OTP Failed");
+            }
+
+        });
+
+    },
+
+    failure:function(error){
+        console.log(error);
+    }
+
+};
+
+function sendOTP(){
+
+    configuration.identifier =
+    document.querySelector("input[name='phone']").value;
+
+    initSendOTP(configuration);
+
+}
+
+</script>
+
+<script src="https://control.msg91.com/app/assets/otp-provider/otp-provider.js"></script>
 
 </body>
 </html>

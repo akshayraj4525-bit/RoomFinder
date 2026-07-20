@@ -78,8 +78,8 @@ def buyer_login():
         "buyer_login.html"
     )
 
-@app.route("/send-otp", methods=["POST"])
-def send_otp():
+#@app.route("/send-otp", methods=["POST"])
+#def send_otp():
 
     phone = request.form["phone"]
 
@@ -94,15 +94,15 @@ def send_otp():
 
     return redirect("/verify-otp")
 
-@app.route("/verify-otp")
-def verify_otp():
+#@app.route("/verify-otp")
+#def verify_otp():
 
     return render_template(
         "verify_otp.html"
     )
 
-@app.route("/check-otp", methods=["POST"])
-def check_otp():
+#@app.route("/check-otp", methods=["POST"])
+#def check_otp():
 
     print("CHECK OTP ROUTE HIT")
 
@@ -121,6 +121,47 @@ def check_otp():
     print("OTP FAILED")
 
     return "Invalid OTP"
+
+@app.route("/verify-msg91", methods=["POST"])
+def verify_msg91():
+
+    data = request.get_json()
+
+    access_token = data["accessToken"]
+
+    url = "https://control.msg91.com/api/v5/widget/verifyAccessToken"
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "authkey": MSG91_AUTH_KEY,
+        "access-token": access_token
+    }
+
+    response = requests.post(
+        url,
+        json=payload,
+        headers=headers
+    )
+
+    print(response.text)
+
+    result = response.json()
+
+    if result.get("type") == "success":
+
+        session["buyer_logged_in"] = True
+        session["role"] = "buyer"
+
+        return jsonify({
+            "success": True
+        })
+
+    return jsonify({
+        "success": False
+    })
 
 # Database Create
 def init_db():
