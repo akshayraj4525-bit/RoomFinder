@@ -14,6 +14,11 @@ href="{{ url_for('static', filename='style.css') }}">
        <div class="login-box">
 
     <h1>Buyer Login</h1>
+    <input
+type="text"
+name="phone"
+class="form-control mt-3"
+placeholder="Enter Mobile Number">
 
     <button
 type="button"
@@ -21,10 +26,6 @@ class="btn btn-primary mt-3"
 onclick="sendOTP()">
 Verify Mobile Number
 </button>
-
-        <button class="btn btn-primary mt-3">
-            Send OTP
-        </button>
 
     </form>
 
