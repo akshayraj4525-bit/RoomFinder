@@ -10,7 +10,9 @@ import random
 import requests
 import os
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
 # from voice_ai import speech_to_text
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -22,30 +24,27 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 from datetime import timedelta
 app.permanent_session_lifetime = timedelta(days=30)
 
-API_KEY = "DRQdhZls6WjrqNvc3GOPIFByuMeEUb0Ko2Vmp5t9wHak7X1Cf8sxX9oDHtA1qRvGy8J64aNOLrVn0ECT"
+MSG91_AUTH_KEY = os.getenv("547072AqRVck8zJ58N6a476fd4P1")
 
 def send_sms_otp(phone, otp):
 
-    url = "https://www.fast2sms.com/dev/bulkV2"
+    url = "https://control.msg91.com/api/v5/otp"
 
     headers = {
-        "authorization": API_KEY
+        "Content-Type": "application/json"
     }
 
-    params = {
-        "route": "otp",
-        "variables_values": str(otp),
-        "flash": "0",
-        "numbers": phone
+    payload = {
+        "mobile": "91" + phone,
+        "otp": str(otp),
+        "authkey": MSG91_AUTH_KEY
     }
 
-    response = requests.get(
-        url,
-        headers=headers,
-        params=params
-    )
+    response = requests.post(url, json=payload, headers=headers)
 
-    print(response.text)
+    print("MSG91 Response =", response.text)
+
+    return response.json()
 
 @app.route("/")
 def landing():
