@@ -72,11 +72,15 @@ var configuration = {
 
 function sendOTP(){
 
-    alert("Step 1");
-
     var phone = document.querySelector("input[name='phone']").value;
 
-    alert(phone);
+    configuration.identifier = phone;
+
+    alert("Before initSendOTP");
+
+    initSendOTP(configuration);
+
+    alert("After initSendOTP");
 
 }
 
