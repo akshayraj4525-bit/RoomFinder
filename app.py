@@ -339,6 +339,7 @@ def add_property():
 
         conn = sqlite3.connect("database.db")
         cur = conn.cursor()
+        
 
         cur.execute("""
         INSERT INTO properties(
