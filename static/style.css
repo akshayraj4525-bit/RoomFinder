@@ -777,3 +777,12 @@ cursor:pointer;
     color:#222;
 
 }
+
+.landing-page{
+    background: url("/static/image/home_bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
