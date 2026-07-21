@@ -22,27 +22,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 from datetime import timedelta
 app.permanent_session_lifetime = timedelta(days=30)
 
-MSG91_AUTH_KEY = os.getenv("MSG91_AUTH_KEY")
 
-def send_sms_otp(phone, otp):
-
-    url = "https://control.msg91.com/api/v5/otp"
-
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "mobile": "91" + phone,
-        "otp": str(otp),
-        "authkey": MSG91_AUTH_KEY
-    }
-
-    response = requests.post(url, json=payload, headers=headers)
-
-    print("MSG91 Response =", response.text)
-
-    return response.json()
 
 @app.route("/")
 def landing():
@@ -53,9 +33,10 @@ def landing():
 @app.route("/buyer")
 def buyer():
 
+    session["buyer_logged_in"] = True
     session["role"] = "buyer"
 
-    return redirect("/buyer-login")
+    return redirect("/home")
 
 
 @app.route("/seller")
@@ -78,8 +59,8 @@ def buyer_login():
         "buyer_login.html"
     )
 
-@app.route("/send-otp", methods=["POST"])
-def send_otp():
+#@app.route("/send-otp", methods=["POST"])
+#def send_otp():
 
     phone = request.form["phone"]
 
@@ -94,15 +75,15 @@ def send_otp():
 
     return redirect("/verify-otp")
 
-@app.route("/verify-otp")
-def verify_otp():
+#@app.route("/verify-otp")
+#def verify_otp():
 
     return render_template(
         "verify_otp.html"
     )
 
-@app.route("/check-otp", methods=["POST"])
-def check_otp():
+#@app.route("/check-otp", methods=["POST"])
+#def check_otp():
 
     print("CHECK OTP ROUTE HIT")
 
