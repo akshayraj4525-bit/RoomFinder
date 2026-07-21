@@ -779,7 +779,7 @@ cursor:pointer;
 }
 
 .landing-page{
-    background: url("/static/image/home_bg.jpg");
+    background: url("/static/image/home-bg.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
