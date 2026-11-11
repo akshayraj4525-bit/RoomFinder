@@ -153,10 +153,16 @@ Dashboard
 
     <div style="position: relative;">
 
-    <img
-    src="/static/uploads/{{ room[7] }}"
-    class="card-img-top"
-    style="height:220px;object-fit:cover;">
+    {% if room[7] %}
+<img src="{{ url_for('static', filename='uploads/' + room[7]) }}"
+     class="card-img-top"
+     style="height:220px; object-fit:cover;">
+{% else %}
+<div class="card-img-top d-flex align-items-center justify-content-center"
+     style="height:220px; background:#eeeeee;">
+    No Image Available
+</div>
+{% endif %}
 
     <a href="/favorite/{{ room[0] }}"
        style="

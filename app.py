@@ -9,13 +9,17 @@ import os
 import random
 import requests
 import os
+import uuid
 from werkzeug.utils import secure_filename
 # from voice_ai import speech_to_text
 
 app = Flask(__name__)
 
 app.secret_key = "roomfinder_secret_key"
-UPLOAD_FOLDER = "static/uploads"
+UPLOAD_FOLDER = os.path.join(
+    app.root_path, "static", "uploads"
+)
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -108,6 +112,14 @@ def buyer_login():
 def init_db():
     conn = sqlite3.connect("database.db",timeout=20)
     cur = conn.cursor()
+
+    cur.execute("""
+CREATE TABLE IF NOT EXISTS property_images(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    property_id INTEGER,
+    image_name TEXT
+)
+""")
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS users(
@@ -278,28 +290,22 @@ def login():
 
     return render_template("login.html")
 
+
 @app.route("/add-property", methods=["GET", "POST"])
 def add_property():
 
-    # Seller Only
-    if session.get("role") != "seller":
-        return "Access Denied"
-
-    # Login Required
     if "user_id" not in session:
         return redirect("/login")
 
-    if request.method == "POST":
+    if session.get("role") != "seller":
+        return "Access Denied"
 
-        # ===============================
-        # Form Data
-        # ===============================
+    if request.method == "POST":
 
         user_id = session["user_id"]
 
         room_type = request.form["room_type"]
         property_type = request.form.get("property_type")
-
         rent = request.form["rent"]
         area = request.form["area"]
         address = request.form["address"]
@@ -311,81 +317,24 @@ def add_property():
         )
 
         occupancy = request.form.get("occupancy")
-
         status = "Pending"
 
-        # ===============================
-        # Images
-        # ===============================
-
+        # Save uploaded images safely
         images = request.files.getlist("images")
-
-        first_image = ""
-
-        if len(images) > 0 and images[0].filename != "":
-
-            first_image = secure_filename(images[0].filename)
-
-            images[0].save(
-                os.path.join(
-                    app.config["UPLOAD_FOLDER"],
-                    first_image
-                )
-            )
-
-        # ===============================
-        # Database
-        # ===============================
-
-        conn = sqlite3.connect("database.db")
-        cur = conn.cursor()
-        
-
-        cur.execute("""
-        INSERT INTO properties(
-            user_id,
-            room_type,
-            rent,
-            area,
-            address,
-            contact,
-            image,
-            map_link,
-            status,
-            property_type,
-            facilities,
-            occupancy
-        )
-        VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
-        """,
-        (
-            user_id,
-            room_type,
-            rent,
-            area,
-            address,
-            contact,
-            first_image,
-            map_link,
-            status,
-            property_type,
-            facilities,
-            occupancy
-        ))
-
-        property_id = cur.lastrowid
-
-        conn.commit()
-
-        # ===============================
-        # Save Multiple Images
-        # ===============================
+        saved_images = []
 
         for img in images:
 
-            if img.filename != "":
+            if img and img.filename:
 
-                filename = secure_filename(img.filename)
+                extension = os.path.splitext(
+                    secure_filename(img.filename)
+                )[1].lower()
+
+                if extension not in [".jpg", ".jpeg", ".png", ".webp"]:
+                    continue
+
+                filename = str(uuid.uuid4()) + extension
 
                 img.save(
                     os.path.join(
@@ -394,31 +343,54 @@ def add_property():
                     )
                 )
 
-                cur.execute("""
-                INSERT INTO property_images(
-                    property_id,
-                    image_name
+                saved_images.append(filename)
+
+        first_image = (
+            saved_images[0] if saved_images else ""
+        )
+
+        # Save property in database
+        conn = sqlite3.connect("database.db")
+        cur = conn.cursor()
+
+        try:
+            cur.execute("""
+                INSERT INTO properties(
+                    user_id, room_type, rent, area,
+                    address, contact, image, map_link,
+                    status, property_type, facilities, occupancy
                 )
-                VALUES(?,?)
-                """,
-                (
-                    property_id,
-                    filename
-                ))
-            print("================================")
-            print("Images Selected:", len(images))
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
+            """, (
+                user_id, room_type, rent, area,
+                address, contact, first_image, map_link,
+                status, property_type, facilities, occupancy
+            ))
 
-            for img in images:
-             print("Image:", img.filename)
+            property_id = cur.lastrowid
 
-            print("First Image:", first_image)
-            print("================================")
-        conn.commit()
-        conn.close()
+            for filename in saved_images:
+                cur.execute("""
+                    INSERT INTO property_images(
+                        property_id, image_name
+                    )
+                    VALUES(?,?)
+                """, (property_id, filename))
+
+            conn.commit()
+
+        except Exception:
+            conn.rollback()
+            raise
+
+        finally:
+            conn.close()
 
         return redirect("/home")
 
     return render_template("add_property.html")
+
+
 
 @app.route("/property/<int:id>")
 def property_details(id):
@@ -427,19 +399,28 @@ def property_details(id):
     cur = conn.cursor()
 
     cur.execute(
-     "SELECT * FROM properties WHERE id=?",
-    (id,)
-)
+        "SELECT * FROM properties WHERE id=?",
+        (id,)
+    )
 
     room = cur.fetchone()
+
+    cur.execute(
+        "SELECT image_name FROM property_images WHERE property_id=?",
+        (id,)
+    )
+
+    images = cur.fetchall()
 
     conn.close()
 
     return render_template(
         "property_details.html",
         room=room,
+        images=images,
         session=session
     )
+
 
 @app.route("/search")
 def search():
