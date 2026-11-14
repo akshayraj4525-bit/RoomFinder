@@ -613,3 +613,100 @@ body{
     background-attachment: fixed;
     min-height: 100vh;
 }
+
+/* ROOMFINDER MOBILE RESPONSIVE FIX */
+
+* {
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .login-box,
+    .register-box,
+    .seller-card,
+    .hero-box,
+    .otp-box,
+    .profile-card,
+    .add-property-box {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: calc(100% - 30px);
+        max-width: 100%;
+        margin: 25px auto;
+        padding: 22px 18px;
+    }
+
+    .login-box input,
+    .register-box input,
+    .otp-box input {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .seller-card h1,
+    .hero-box h1,
+    .home-title {
+        font-size: clamp(28px, 8vw, 38px);
+        overflow-wrap: anywhere;
+    }
+
+    .home-subtitle {
+        font-size: 17px;
+    }
+
+    .room-heading {
+        font-size: 30px;
+    }
+
+    .search-form {
+        padding: 0 15px;
+    }
+
+    .search-form select,
+    .search-form button {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .register-btn,
+    .login-btn {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        font-size: 16px;
+    }
+
+    .profile-container {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        padding: 20px 15px;
+    }
+
+    .profile-container h1 {
+        font-size: 34px;
+    }
+
+    .add-property-page,
+    .profile-page,
+    body.login-page {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .cards-wrapper {
+        padding: 0 12px;
+        gap: 15px;
+    }
+}
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <title>RoomFinder</title>
@@ -7,15 +7,10 @@
 
 <link rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <body class="home-page">
-
-</div>
+<body class="home-page">
 
 <nav class="navbar navbar-dark bg-dark">
 <div class="container">
@@ -27,7 +22,7 @@ href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.m
             class="btn btn-dark border-0"
             data-bs-toggle="dropdown">
 
-            👤
+            ðŸ‘¤
 
         </button>
 
@@ -60,7 +55,7 @@ href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.m
 
 
 <a href="/" class="btn btn-outline-light">
-    🏠 Welcome
+    ðŸ  Welcome
 </a>
 
 {% endif %}
@@ -174,9 +169,9 @@ Dashboard
        text-decoration:none;">
 
        {% if room[0] in favorite_ids %}
-            ❤️
+            â¤ï¸
         {% else %}
-            🤍
+            ðŸ¤
         {% endif %}
 
     </a>
@@ -197,7 +192,7 @@ Featured
 
 <h4>{{ room[2] }}</h4>
 
-<p><strong>Rent:</strong> ₹{{ room[3] }}</p>
+<p><strong>Rent:</strong> â‚¹{{ room[3] }}</p>
 
 <p><strong>Area:</strong> {{ room[4] }}</p>
 
@@ -253,3 +248,4 @@ WhatsApp Owner
 
 </body>
 </html>
+
